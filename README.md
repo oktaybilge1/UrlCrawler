@@ -1,56 +1,54 @@
 # UrlCrawler
 
-Bu uygulama, verilen bir URL için çeşitli güvenlik tarama işlemlerini gerçekleştiren Go tabanlı bir web aracıdır. Aşağıdaki tarama türlerini entegre bir şekilde çalıştırır:
+UrlCrawler is a Go-based security scanning web application designed to run reconnaissance and analysis for a given target URL. It integrates and automates the execution of several popular security tools:
 
-- **Nmap**: Belirli açık portlar üzerinde aktif tarama yapma.
-- **Assetfinder**: Verilen alan adı için alt alan adlarını (subdomains) tarama.
-- **Nuclei**: Nuclei tarama şablonlarını kullanarak zafiyet taraması gerçekleştirme.
-
----
-
-## Proje Geçmişi / Background
-
-Bu proje, yazarın staj döneminde (AI kod asistanlarının yaygınlaşmadığı bir dönemde) geliştirilmiştir. Web tabanlı bir arayüz üzerinden güvenlik araçlarını (Nmap, Nuclei, Assetfinder) yönetmeyi amaçlayan bu çalışma, daha sonra geliştirilen çok daha kapsamlı ve profesyonel bir External Attack Surface Management platformu olan **Mangudai ASM** projesinin ilk tohumlarını atmış ve temel ilham kaynağı olmuştur.
+- **Nmap**: Active port scanning to discover exposed services.
+- **Assetfinder**: Passive DNS subdomain enumeration for mapping target assets.
+- **Nuclei**: Active vulnerability scanning using customizable templates.
 
 ---
 
-## Gereksinimler
+## Project Background
 
-Bu uygulamayı çalıştırmak için sisteminizde aşağıdaki yazılım ve araçların kurulu ve ortam değişkenlerinde (PATH) tanımlı olması gereklidir:
-
-- Go Dil Ortamı (1.18+)
-- **Nmap**: Port taraması için
-- **Assetfinder**: Alt alan adlarını keşfetmek için
-- **Nuclei**: Zafiyet taraması yapmak için
+This project was developed during the author's internship period (prior to the widespread adoption of AI coding assistants) through entirely manual research and implementation. Providing a simple web dashboard to trigger security tools (Nmap, Nuclei, Assetfinder), this project served as the initial inspiration and laid the groundwork for the more advanced **Mangudai ASM (Attack Surface Management)** platform.
 
 ---
 
-## Kullanım
+## Requirements
 
-Uygulamayı yerelinizde başlatmak için:
+To run this application locally, you must have the following tools installed and added to your system's environment variables (PATH):
 
-1. Bağımlılıkları yükleyin ve projeyi derleyin:
+- Go compiler (1.18+)
+- **Nmap**: For port scanning.
+- **Assetfinder**: For subdomain discovery.
+- **Nuclei**: For vulnerability scanning.
+
+---
+
+## Installation & Running
+
+1. Clone the repository and build the binary:
    ```bash
    go build -o UrlCrawler
    ```
 
-2. Uygulamayı çalıştırın:
+2. Start the web server:
    ```bash
    ./UrlCrawler
    ```
 
-3. Web tarayıcınızdan **`http://localhost:8000`** adresine giderek arayüz üzerinden taramaları başlatabilirsiniz.
+3. Open your browser and navigate to **`http://localhost:8000`** to access the web panel and start scanning targets.
 
 ---
 
-## Katkıda Bulunma
+## Contributing
 
-Projeye katkıda bulunmak isterseniz, lütfen bir Pull Request gönderin veya Issue açın. Katkılarınızı memnuniyetle karşılıyoruz!
+If you would like to contribute to this project, please open an Issue or submit a Pull Request. All contributions are welcome!
 
 ---
 
-## İletişim
+## Contact
 
-Sorularınız ve geri bildirimleriniz için:
-- **E-posta**: bilge.oktay.944@gmail.com
+For questions and feedback:
+- **Email**: bilge.oktay.944@gmail.com
 - **GitHub**: [@oktaybilge1](https://github.com/oktaybilge1)
