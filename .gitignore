@@ -1,0 +1,11 @@
+# Databases
+*.db
+
+# Go binaries
+*.exe
+UrlCrawler
+/dist/
+/bin/
+
+# Environment files
+.env
