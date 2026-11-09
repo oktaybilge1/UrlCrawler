@@ -1,54 +1,92 @@
-# UrlCrawler
+<div align="center">
 
-UrlCrawler is a Go-based security scanning web application designed to run reconnaissance and analysis for a given target URL. It integrates and automates the execution of several popular security tools:
+# 🛰️ UrlCrawler
 
-- **Nmap**: Active port scanning to discover exposed services.
-- **Assetfinder**: Passive DNS subdomain enumeration for mapping target assets.
-- **Nuclei**: Active vulnerability scanning using customizable templates.
+**A lightweight web dashboard that chains WhatWeb, Nmap, Assetfinder and Nuclei into a single reconnaissance workflow.**
 
----
+![Go](https://img.shields.io/badge/Go-1.18+-00ADD8?logo=go&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-storage-003B57?logo=sqlite&logoColor=white)
+![Status](https://img.shields.io/badge/status-hobby%20%2F%20educational-blue)
 
-## Project Background
-
-This project was developed during the author's internship period (prior to the widespread adoption of AI coding assistants) through entirely manual research and implementation. Providing a simple web dashboard to trigger security tools (Nmap, Nuclei, Assetfinder), this project served as the initial inspiration and laid the groundwork for the more advanced **Mangudai ASM (Attack Surface Management)** platform.
+</div>
 
 ---
 
-## Requirements
+## ✨ Features
 
-To run this application locally, you must have the following tools installed and added to your system's environment variables (PATH):
+| | Tool | What it does |
+|---|---|---|
+| 🔍 | **WhatWeb** | Fingerprints the target's technology stack before scanning |
+| 🔌 | **Nmap** | Active port scan of common service ports (21, 22, 80, 443) |
+| 🌐 | **Assetfinder** | Passive subdomain enumeration to map the attack surface |
+| 🛡️ | **Nuclei** | Template-based vulnerability scanning (CVEs, exposed files, panels, takeovers, …) |
 
-- Go compiler (1.18+)
-- **Nmap**: For port scanning.
-- **Assetfinder**: For subdomain discovery.
-- **Nuclei**: For vulnerability scanning.
+- Clean, responsive web UI with automatic light / dark theme
+- Pick exactly which scans and Nuclei template groups to run
+- Per-tool timing and total scan duration
+- Every scan is saved to a local SQLite database and browsable from the **History** page
+- Single self-contained binary: UI assets are embedded, no external CDN calls
 
----
+## 🧭 How it works
 
-## Installation & Running
+1. Enter a target URL → WhatWeb fingerprints its technologies.
+2. Choose which scans to run (Nmap, Assetfinder, Nuclei) and which Nuclei template groups to use.
+3. Results are shown per tool with timings and stored in SQLite for later review.
 
-1. Clone the repository and build the binary:
-   ```bash
-   go build -o UrlCrawler
-   ```
+## 🚀 Quick start
 
-2. Start the web server:
-   ```bash
-   ./UrlCrawler
-   ```
+### 1. Install the scanners
 
-3. Open your browser and navigate to **`http://localhost:8000`** to access the web panel and start scanning targets.
+All four tools must be available in your `PATH`:
 
----
+```bash
+sudo apt install nmap whatweb                              # Debian / Ubuntu
+go install github.com/tomnomnom/assetfinder@latest
+go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
+nuclei -update-templates                                    # downloads ~/nuclei-templates
+```
 
-## Contributing
+### 2. Build and run
 
-If you would like to contribute to this project, please open an Issue or submit a Pull Request. All contributions are welcome!
+You need Go 1.18+ and a C compiler (the SQLite driver uses cgo).
 
----
+```bash
+git clone https://github.com/oktaybilge1/UrlCrawler.git
+cd UrlCrawler
+go build -o UrlCrawler
+./UrlCrawler
+```
 
-## Contact
+Open **http://localhost:8000**, enter a target such as `www.example.com`, and follow the steps.
 
-For questions and feedback:
-- **Email**: bilge.oktay.944@gmail.com
-- **GitHub**: [@oktaybilge1](https://github.com/oktaybilge1)
+## 🗂️ Project structure
+
+```
+UrlCrawler/
+├── main.go                 # HTTP handlers, scan runners, SQLite storage
+└── web/
+    ├── static/style.css    # UI theme
+    └── templates/pages.html# All pages (embedded into the binary)
+```
+
+## 🔒 Security notes
+
+- Targets must be valid `www.` domain names; scanner commands run **without a shell**, and Nuclei template names are checked against a fixed allow-list.
+- All output shown in the UI is HTML-escaped.
+- The dashboard has **no authentication**. Run it on localhost or behind a trusted network only.
+
+## ⚠️ Legal notice
+
+This tool is intended for **educational use and authorized security testing only**. Scan only systems you own or have explicit written permission to test. The author accepts no responsibility for misuse.
+
+## 📖 Background
+
+UrlCrawler was built during the author's internship, before AI coding assistants were widespread, through entirely manual research and implementation. It served as the starting point for the more advanced **Mangudai ASM (Attack Surface Management)** platform.
+
+## 🤝 Contributing
+
+Issues and pull requests are welcome.
+
+## 📬 Contact
+
+**Oktay Bilge** · [bilge.oktay.944@gmail.com](mailto:bilge.oktay.944@gmail.com) · [@oktaybilge1](https://github.com/oktaybilge1)

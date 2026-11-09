@@ -9,3 +9,6 @@ UrlCrawler
 
 # Environment files
 .env
+
+# Nuclei şablonları (nuclei -update-templates ile ~/nuclei-templates altına iner)
+nuclei-templates/

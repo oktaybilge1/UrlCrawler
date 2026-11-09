@@ -1,0 +1,107 @@
+{{define "head"}}<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{.Title}} · UrlCrawler</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="nav">
+  <a class="brand" href="/">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M12 12 19 5"/></svg>
+    UrlCrawler
+  </a>
+  <nav><a href="/">Yeni Tarama</a><a href="/view">Geçmiş</a></nav>
+</header>
+<main>{{end}}
+
+{{define "foot"}}</main>
+<footer>Yalnızca yetkiniz olan sistemleri tarayın.</footer>
+<script>
+document.querySelectorAll("form[data-busy]").forEach(function (f) {
+  f.addEventListener("submit", function () {
+    var b = f.querySelector("button[type=submit]");
+    if (b) { b.disabled = true; b.textContent = "Taranıyor…"; }
+  });
+});
+</script>
+</body>
+</html>{{end}}
+
+{{define "home"}}{{template "head" .}}
+<section class="hero">
+  <h1>Hedefinizi tek panelden keşfedin</h1>
+  <p class="lead">Teknoloji tespiti, port taraması, alt alan adı keşfi ve zafiyet taraması: WhatWeb, Nmap, Assetfinder ve Nuclei tek akışta.</p>
+  <form class="search" action="/teknoloji-tarama" method="post" data-busy>
+    <input type="text" name="url" placeholder="www.ornek.com" pattern="www\..+" required autofocus aria-label="Hedef URL">
+    <button class="btn" type="submit">Teknoloji Taraması Yap</button>
+  </form>
+  <p class="hint">Adres <code>www.</code> ile başlamalıdır.</p>
+</section>
+{{template "foot" .}}{{end}}
+
+{{define "tech"}}{{template "head" .}}
+<h1>{{.URL}}</h1>
+<p class="lead">Teknoloji taraması tamamlandı. Şimdi çalıştırmak istediğiniz taramaları seçin.</p>
+
+<div class="card">
+  <div class="card-head"><h2>Teknoloji Tarama Sonuçları</h2><span class="badge">WhatWeb</span></div>
+  <pre>{{.Output}}</pre>
+</div>
+
+<form class="card" action="/process" method="post" data-busy>
+  <input type="hidden" name="url" value="{{.URL}}">
+  <h2>Tarama Türleri</h2>
+  <div class="options">
+    <label class="opt"><input type="checkbox" name="scanType" value="nmap"><span>Nmap</span></label>
+    <label class="opt"><input type="checkbox" name="scanType" value="assetfinder"><span>Assetfinder</span></label>
+    <label class="opt"><input type="checkbox" name="scanType" value="nuclei"><span>Nuclei</span></label>
+  </div>
+
+  <div class="group-title">Nuclei şablonları</div>
+  <div class="options">
+    {{range .Templates}}<label class="opt"><input type="checkbox" name="selectedTemplates" value="{{.}}"><span>{{.}}</span></label>
+    {{end}}
+  </div>
+
+  <div class="actions"><button class="btn" type="submit">Taramayı Başlat</button></div>
+</form>
+{{template "foot" .}}{{end}}
+
+{{define "results"}}{{template "head" .}}
+<h1>Tarama Sonuçları</h1>
+<p class="total">{{.URL}} · Toplam süre: <strong>{{.Total}}</strong></p>
+{{range .Scans}}
+<div class="card">
+  <div class="card-head"><h2>{{.Name}}</h2><span class="badge">{{.Duration}}</span></div>
+  <pre>{{.Output}}</pre>
+</div>
+{{end}}
+<div class="actions">
+  <a class="btn" href="/">Yeni Tarama</a>
+  <a class="btn ghost" href="/view">Geçmiş</a>
+</div>
+{{template "foot" .}}{{end}}
+
+{{define "history"}}{{template "head" .}}
+<h1>Tarama Geçmişi</h1>
+{{range .Rows}}
+<div class="card">
+  <div class="row-title"><h2>{{.URL}}</h2><span class="badge">#{{.ID}}</span></div>
+  <details><summary>Nmap</summary><pre>{{.Nmap}}</pre></details>
+  <details><summary>Assetfinder</summary><pre>{{.Assetfinder}}</pre></details>
+  <details><summary>Nuclei</summary><pre>{{.Nuclei}}</pre></details>
+</div>
+{{else}}
+<div class="empty">Henüz kayıtlı tarama yok.</div>
+{{end}}
+{{template "foot" .}}{{end}}
+
+{{define "error"}}{{template "head" .}}
+<div class="card error">
+  <h2>Bir sorun oluştu</h2>
+  <p>{{.Msg}}</p>
+  <a class="btn ghost" href="/">Ana sayfaya dön</a>
+</div>
+{{template "foot" .}}{{end}}
